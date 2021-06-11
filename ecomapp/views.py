@@ -11,13 +11,15 @@ from django.db.models import Q
 from .models import *
 from .forms import *
 import requests
+from django.shortcuts import get_object_or_404
 
 
 class EcomMixin(object):
     def dispatch(self, request, *args, **kwargs):
         cart_id = request.session.get("cart_id")
         if cart_id:
-            cart_obj = Cart.objects.get(id=cart_id)
+            # cart_obj = Cart.objects.get(id=cart_id)
+            cart_obj = get_object_or_404(Cart, id=cart_id)
             if request.user.is_authenticated and request.user.customer:
                 cart_obj.customer = request.user.customer
                 cart_obj.save()
